@@ -1,0 +1,63 @@
+local UserInputService = game:GetService("UserInputService")
+local GuiService = game:GetService("GuiService")
+local Players = game:GetService("Players")
+local TeleportService = game:GetService("TeleportService")
+local StarterGui = game:GetService("StarterGui")
+local LocalPlayer = Players.LocalPlayer
+
+local spoofedPlatform = Enum.Platform.XboxOne
+local spoofedInterface = true
+
+local oldGetPlatform = UserInputService.GetPlatform
+local oldIsTenFootInterface = GuiService.IsTenFootInterface
+
+setreadonly(UserInputService, false)
+UserInputService.GetPlatform = function(self, ...)
+    return spoofedPlatform
+end
+setreadonly(UserInputService, true)
+
+setreadonly(GuiService, false)
+GuiService.IsTenFootInterface = function(self, ...)
+    return spoofedInterface
+end
+setreadonly(GuiService, true)
+
+local newGetPlatform = hookfunction(oldGetPlatform, function(...)
+    return spoofedPlatform
+end)
+
+local newIsTenFootInterface = hookfunction(oldIsTenFootInterface, function(...)
+    return spoofedInterface
+end)
+
+local mt = getrawmetatable(game)
+setreadonly(mt, false)
+
+local oldNamecall = mt.__namecall
+mt.__namecall = newcclosure(function(self, ...)
+    local args = {...}
+    local method = getnamecallmethod()
+    
+    if method == "FireServer" or method == "InvokeServer" then
+        if typeof(args[1]) == "string" and string.find(args[1]:lower(), "platform") then
+            return
+        end
+    end
+    
+    return oldNamecall(self, unpack(args))
+end)
+
+setreadonly(mt, true)
+
+StarterGui:SetCore("SendNotification", {
+    Title = "Spoofer";
+    Text = "script loaded";
+    Duration = 5;
+})
+
+TeleportService.TeleportInitFailed:Connect(function()
+    loadstring(game:HttpGet("your_script_url_here", true))()
+end)
+
+print("yap yap your script works.")
