@@ -57,7 +57,7 @@ StarterGui:SetCore("SendNotification", {
 })
 
 TeleportService.TeleportInitFailed:Connect(function()
-    loadstring(game:HttpGet("your_script_url_here", true))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/artyom77767/Spooferv1/refs/heads/main/ConsoleSpooferV1",true))()
 end)
 
 print("yap yap your script works.")
