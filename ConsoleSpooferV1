@@ -5,7 +5,7 @@ local TeleportService = game:GetService("TeleportService")
 local StarterGui = game:GetService("StarterGui")
 local LocalPlayer = Players.LocalPlayer
 
-local spoofedPlatform = Enum.Platform.XboxOne
+Enum.Platform.XBoxOne
 local spoofedInterface = true
 
 local oldGetPlatform = UserInputService.GetPlatform
